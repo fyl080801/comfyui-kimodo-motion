@@ -33,10 +33,13 @@ if [ "$(cat "$STAMP" 2>/dev/null || true)" = "$KIMODO_COMMIT" ] &&
   PYTHONPATH=$SITE "$PYTHON" -c "import motion_correction" 2>/dev/null; then
   echo "motion_correction 已是这个提交的，不重编"
 else
+  # 编到旁边、能导入了再换上：编译要现取 pybind11 / Eigen，网络一抖就失败，失败时原来能用的那份要留着
+  rm -rf "$SITE.new"
+  "$PYTHON" -m pip install --quiet --no-deps --no-build-isolation --target "$SITE.new" "$SRC/MotionCorrection"
+  PYTHONPATH=$SITE.new "$PYTHON" -c "import motion_correction; print('motion_correction ok')"
+  echo "$KIMODO_COMMIT" >"$SITE.new/.kimodo-commit"
   rm -rf "$SITE"
-  "$PYTHON" -m pip install --quiet --no-deps --no-build-isolation --target "$SITE" "$SRC/MotionCorrection"
-  PYTHONPATH=$SITE "$PYTHON" -c "import motion_correction; print('motion_correction ok')"
-  echo "$KIMODO_COMMIT" >"$STAMP"
+  mv "$SITE.new" "$SITE"
 fi
 
 # 进程里只能有一份 kimodo（SKIP_LINK=1 跳过这一步，只装不切换）：ComfyUI-Kimodo-Enhanced 自带一份旧的（靠 sys.path 导入），换成指向这里的链接，原来的留作 kimodo.bundled
