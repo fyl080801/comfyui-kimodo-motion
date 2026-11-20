@@ -1,0 +1,3 @@
+# install.sh 装出来的上游 Kimodo 和编好的扩展
+vendor/
+__pycache__/

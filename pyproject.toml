@@ -1,0 +1,10 @@
+[project]
+name = "comfyui-kimodo-motion"
+description = "Kimodo 动作生成节点：提示词 + 约束 → .motion.json（直接调上游 nv-tlabs/kimodo，开后处理）"
+version = "1.0.0"
+
+[project.urls]
+Repository = "https://github.com/fyl080801/comfyui-kimodo-motion"
+
+[tool.comfy]
+DisplayName = "Kimodo Motion"
